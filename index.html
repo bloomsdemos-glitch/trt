@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystic Tarot v3.1: Celtic Fix</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400&display=swap');
+
+        :root {
+            --bg-color: #0f0f13;
+            --accent: #d4af37; /* Gold */
+            --accent-dim: #8a7020;
+            --text-main: #e0e0e0;
+            --card-width: 130px; 
+            --card-height: 220px;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Lato', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            margin-bottom: 10px;
+        }
+
+        /* Controls Area */
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+            z-index: 10;
+            align-items: center;
+            background: rgba(20, 20, 25, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        input[type="text"], select {
+            width: 90%;
+            padding: 12px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 4px;
+            font-family: 'Lato', sans-serif;
+            outline: none;
+            text-align: center;
+            transition: 0.3s;
+        }
+        
+        input[type="text"]:focus, select:focus { border-color: var(--accent); }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-family: 'Cinzel', serif;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: 0.3s;
+            border-radius: 4px;
+            border: 1px solid var(--accent);
+        }
+
+        button.shuffle-btn {
+            background: transparent;
+            color: var(--accent);
+        }
+
+        button.shuffle-btn:hover {
+            background: rgba(212, 175, 55, 0.1);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        button.reset-btn {
+            background: #333;
+            color: #888;
+            border-color: #555;
+            font-size: 0.8em;
+        }
+        button.reset-btn:hover { background: #444; color: white; }
+
+        /* Deck Area */
+        .deck-zone {
+            height: 260px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .deck-container {
+            position: relative;
+            width: var(--card-width);
+            height: var(--card-height);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .deck-container.locked {
+            opacity: 0.5;
+            pointer-events: none;
+            filter: grayscale(100%);
+        }
+
+        .deck-card {
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(45deg, #181825, #181825 10px, #252538 10px, #252538 20px);
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            position: absolute;
+            top: 0; left: 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .deck-card::after { content: '✦'; font-size: 40px; color: var(--accent); opacity: 0.4; }
+
+        /* Shuffle Animation */
+        @keyframes shuffleLeft {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-60px, -10px) rotate(-5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        @keyframes shuffleRight {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(60px, 10px) rotate(5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        .shuffling .c1 { animation: shuffleLeft 0.5s ease-in-out 3; }
+        .shuffling .c2 { animation: shuffleRight 0.5s ease-in-out 3; }
+        .shuffling .c3 { animation: shuffleLeft 0.5s ease-in-out 3 reverse; }
+
+        .deck-instruction {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: var(--accent);
+            font-style: italic;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        /* Spread Area */
+        .spread-area {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 200px;
+            padding-bottom: 50px;
+        }
+
+        .card-slot {
+            width: var(--card-width);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            animation: fadeIn 0.8s forwards;
+            margin-bottom: 20px;
+        }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        .card-inner {
+            width: var(--card-width);
+            height: var(--card-height);
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+            cursor: pointer;
+        }
+        .card-inner.flipped { transform: rotateY(180deg); }
+        
+        .card-front, .card-back {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; border-radius: 10px; border: 2px solid var(--accent);
+        }
+        .card-front { background: repeating-linear-gradient(45deg, #181825, #181825 10px, #252538 10px, #252538 20px); display: flex; align-items: center; justify-content: center; }
+        .card-front::after { content: '✦'; font-size: 40px; color: var(--accent); }
+        .card-back { background: #000; transform: rotateY(180deg); background-size: cover; background-position: center; }
+
+        .card-meaning {
+            margin-top: 10px;
+            font-size: 0.8em;
+            text-align: center;
+            background: rgba(0,0,0,0.8);
+            padding: 10px;
+            border-radius: 5px;
+            border-top: 1px solid var(--accent);
+            display: none;
+            width: 100%;
+            box-sizing: border-box;
+            color: #ccc;
+        }
+        .card-meaning strong { color: var(--accent); display: block; margin-bottom: 5px; font-family: 'Cinzel';}
+
+        .position-label {
+            font-family: 'Cinzel', serif;
+            font-size: 0.7em;
+            color: #888;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            text-align: center;
+            height: 30px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        /* Result Box - FIXED */
+        .output-zone {
+            width: 90%;
+            max-width: 800px;
+            background: #151515;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            display: none;
+            margin-bottom: 50px;
+        }
+        textarea { 
+            width: 100%; 
+            height: auto; 
+            min-height: 200px; /* Базова висота */
+            background: #0a0a0a; 
+            color: #aaa; 
+            border: 1px solid #333; 
+            resize: vertical; 
+            box-sizing: border-box; 
+            padding: 15px; 
+            font-family: monospace; 
+            white-space: pre-wrap; /* Щоб переноси рядків зберігались */
+        }
+        .copy-btn { margin-top: 10px; padding: 12px 30px; background: var(--accent); color: #000; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; width: 100%; }
+        .copy-btn:hover { background: white; }
+
+    </style>
+</head>
+<body>
+
+    <h1>Oracle ✦ Gemini</h1>
+    
+    <div class="controls">
+        <input type="text" id="userQuestion" placeholder="Твоє питання до Всесвіту...">
+        
+        <select id="spreadSelector">
+            <option value="1">✦ Бліц (1 карта)</option>
+            <option value="3" selected>✦ Три карти (Минуле/Тепер./Майб.)</option>
+            <option value="3_alt">✦ Розум / Серце / Дії (3 карти)</option>
+            <option value="5">✦ Шлях (5 карт)</option>
+            <option value="10">✦ КЕЛЬТСЬКИЙ ХРЕСТ (10 карт)</option>
+        </select>
+
+        <div class="btn-group">
+            <button class="shuffle-btn" onclick="startShuffle()">🖐 Перетасувати колоду</button>
+            <button class="reset-btn" onclick="resetAll()">Скинути</button>
+        </div>
+    </div>
+
+    <div class="deck-zone">
+        <div class="deck-container locked" id="deckContainer" onclick="drawCard()">
+            <div class="deck-card c1"></div>
+            <div class="deck-card c2" style="transform: translate(2px, 2px);"></div>
+            <div class="deck-card c3" style="transform: translate(4px, 4px);"></div>
+            <div class="deck-card" style="transform: translate(6px, 6px);"></div>
+        </div>
+        <div class="deck-instruction" id="deckInst">Колода готова. Тягни карти! (<span id="countDisplay">0</span>/<span id="totalDisplay">0</span>)</div>
+    </div>
+
+    <div class="spread-area" id="spreadArea"></div>
+
+    <div class="output-zone" id="outputZone">
+        <h3 style="margin-top:0; color:var(--accent); font-family:'Cinzel'">✦ Твій Розклад ✦</h3>
+        <textarea id="resultText" readonly></textarea>
+        <button class="copy-btn" onclick="copyResult()">Скопіювати все</button>
+    </div>
+
+<script>
+    const tarotDeck = [
+        { name: "The Fool (Блазень)", img: "https://upload.wikimedia.org/wikipedia/commons/9/90/RWS_Tarot_00_Fool.jpg", meaning: "Новий старт, наївність, ризик." },
+        { name: "The Magician (Маг)", img: "https://upload.wikimedia.org/wikipedia/commons/d/de/RWS_Tarot_01_Magician.jpg", meaning: "Дія, маніфестація, сила волі." },
+        { name: "The High Priestess (Жриця)", img: "https://upload.wikimedia.org/wikipedia/commons/8/88/RWS_Tarot_02_High_Priestess.jpg", meaning: "Інтуїція, таємниця, підсвідомість." },
+        { name: "The Empress (Імператриця)", img: "https://upload.wikimedia.org/wikipedia/commons/d/d2/RWS_Tarot_03_Empress.jpg", meaning: "Родючість, природа, комфорт." },
+        { name: "The Emperor (Імператор)", img: "https://upload.wikimedia.org/wikipedia/commons/c/c3/RWS_Tarot_04_Emperor.jpg", meaning: "Влада, структура, контроль." },
+        { name: "The Hierophant (Ієрофант)", img: "https://upload.wikimedia.org/wikipedia/commons/8/8d/RWS_Tarot_05_Hierophant.jpg", meaning: "Традиція, мораль, навчання." },
+        { name: "The Lovers (Закохані)", img: "https://upload.wikimedia.org/wikipedia/commons/3/3a/RWS_Tarot_06_Lovers.jpg", meaning: "Любов, вибір, гармонія." },
+        { name: "The Chariot (Колісниця)", img: "https://upload.wikimedia.org/wikipedia/commons/9/9b/RWS_Tarot_07_Chariot.jpg", meaning: "Воля, перемога, рух." },
+        { name: "Strength (Сила)", img: "https://upload.wikimedia.org/wikipedia/commons/f/f5/RWS_Tarot_08_Strength.jpg", meaning: "Терпіння, м'яка сила, контроль." },
+        { name: "The Hermit (Відлюдник)", img: "https://upload.wikimedia.org/wikipedia/commons/4/4d/RWS_Tarot_09_Hermit.jpg", meaning: "Самотність, мудрість, пошук." },
+        { name: "Wheel of Fortune (Колесо)", img: "https://upload.wikimedia.org/wikipedia/commons/3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg", meaning: "Доля, зміни, удача." },
+        { name: "Justice (Справедливість)", img: "https://upload.wikimedia.org/wikipedia/commons/e/e0/RWS_Tarot_11_Justice.jpg", meaning: "Правда, закон, карма." },
+        { name: "The Hanged Man (Повішений)", img: "https://upload.wikimedia.org/wikipedia/commons/2/2b/RWS_Tarot_12_Hanged_Man.jpg", meaning: "Жертва, пауза, інший кут зору." },
+        { name: "Death (Смерть)", img: "https://upload.wikimedia.org/wikipedia/commons/d/d7/RWS_Tarot_13_Death.jpg", meaning: "Кінець, трансформація, перехід." },
+        { name: "Temperance (Помірність)", img: "https://upload.wikimedia.org/wikipedia/commons/f/f8/RWS_Tarot_14_Temperance.jpg", meaning: "Баланс, зцілення, компроміс." },
+        { name: "The Devil (Диявол)", img: "https://upload.wikimedia.org/wikipedia/commons/5/55/RWS_Tarot_15_Devil.jpg", meaning: "Залежність, матеріалізм, тінь." },
+        { name: "The Tower (Вежа)", img: "https://upload.wikimedia.org/wikipedia/commons/5/53/RWS_Tarot_16_Tower.jpg", meaning: "Катастрофа, руйнування, інсайт." },
+        { name: "The Star (Зірка)", img: "https://upload.wikimedia.org/wikipedia/commons/d/db/RWS_Tarot_17_Star.jpg", meaning: "Надія, натхнення, віра." },
+        { name: "The Moon (Місяць)", img: "https://upload.wikimedia.org/wikipedia/commons/7/7f/RWS_Tarot_18_Moon.jpg", meaning: "Ілюзія, страх, невідоме." },
+        { name: "The Sun (Сонце)", img: "https://upload.wikimedia.org/wikipedia/commons/1/17/RWS_Tarot_19_Sun.jpg", meaning: "Радість, успіх, ясність." },
+        { name: "Judgement (Суд)", img: "https://upload.wikimedia.org/wikipedia/commons/d/dd/RWS_Tarot_20_Judgement.jpg", meaning: "Відродження, прощення, поклик." },
+        { name: "The World (Світ)", img: "https://upload.wikimedia.org/wikipedia/commons/f/ff/RWS_Tarot_21_World.jpg", meaning: "Завершення, цілісність, подорож." },
+        { name: "Ace of Swords (Туз Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Swords01.jpg", meaning: "Ясність, нова ідея, правда." },
+        { name: "3 of Swords (3 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Swords03.jpg", meaning: "Біль, розбите серце, смуток." },
+        { name: "10 of Swords (10 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Swords10.jpg", meaning: "Кінець, зрада, дно." },
+        { name: "Ace of Cups (Туз Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/3/36/Cups01.jpg", meaning: "Нова любов, емоції, початок." },
+        { name: "2 of Cups (2 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Cups02.jpg", meaning: "Партнерство, зустріч, кохання." }
+    ];
+
+    const SPREAD_TYPES = {
+        "1": { name: "Бліц", positions: ["Відповідь"] },
+        "3": { name: "Три Карти", positions: ["Минуле", "Теперішнє", "Майбутнє"] },
+        "3_alt": { name: "Розум/Серце/Дії", positions: ["Думки", "Почуття", "Дії"] },
+        "5": { name: "Шлях", positions: ["Зараз", "Перешкода", "Приховане", "Порада", "Результат"] },
+        "10": { 
+            name: "Кельтський Хрест", 
+            positions: [
+                "1. Ситуація зараз", 
+                "2. Що перетинає (Проблема)", 
+                "3. Підсвідоме (Корінь)", 
+                "4. Минуле", 
+                "5. Свідоме (Мета)", 
+                "6. Майбутнє", 
+                "7. Ти сам (Ставлення)", 
+                "8. Оточення", 
+                "9. Надії / Страхи", 
+                "10. Підсумок"
+            ] 
+        }
+    };
+
+    let currentDeck = [];
+    let drawnCards = [];
+    let currentPositions = [];
+    let isReadingActive = false;
+
+    function resetAll() {
+        document.getElementById('spreadArea').innerHTML = '';
+        document.getElementById('outputZone').style.display = 'none';
+        document.getElementById('resultText').value = '';
+        document.getElementById('deckInst').style.opacity = '0';
+        document.getElementById('deckContainer').classList.add('locked');
+        document.getElementById('deckContainer').classList.remove('shuffling');
+        isReadingActive = false;
+        drawnCards = [];
+        document.getElementById('countDisplay').innerText = '0';
+        document.getElementById('totalDisplay').innerText = '0';
+    }
+
+    function startShuffle() {
+        resetAll();
+        
+        const question = document.getElementById('userQuestion').value;
+        if (!question.trim()) { alert("Питання спочатку!"); return; }
+
+        const selector = document.getElementById('spreadSelector');
+        const spreadConfig = SPREAD_TYPES[selector.value];
+        currentPositions = spreadConfig.positions;
+
+        const deck = document.getElementById('deckContainer');
+        deck.classList.add('shuffling');
+
+        setTimeout(() => {
+            deck.classList.remove('shuffling');
+            deck.classList.remove('locked');
+            
+            currentDeck = [...tarotDeck].sort(() => Math.random() - 0.5);
+            isReadingActive = true;
+
+            document.getElementById('deckInst').style.opacity = '1';
+            updateCounter();
+
+        }, 1500);
+    }
+
+    function drawCard() {
+        if (!isReadingActive) return;
+        if (drawnCards.length >= currentPositions.length) return;
+
+        const cardData = currentDeck.pop();
+        const positionName = currentPositions[drawnCards.length];
+        
+        drawnCards.push({ ...cardData, position: positionName });
+
+        const cardSlot = document.createElement('div');
+        cardSlot.className = 'card-slot';
+        cardSlot.innerHTML = `
+            <div class="position-label">${positionName}</div>
+            <div class="card-inner" onclick="flipCard(this)">
+                <div class="card-front"></div>
+                <div class="card-back" style="background-image: url('${cardData.img}')"></div>
+            </div>
+            <div class="card-meaning">
+                <strong>${cardData.name}</strong>
+                ${cardData.meaning}
+            </div>
+        `;
+        document.getElementById('spreadArea').appendChild(cardSlot);
+
+        updateCounter();
+
+        if (drawnCards.length === currentPositions.length) {
+            isReadingActive = false;
+            document.getElementById('deckContainer').classList.add('locked');
+            document.getElementById('deckInst').innerText = "Розклад завершено. Відкривай карти!";
+            generateOutput();
+        }
+    }
+
+    function updateCounter() {
+        document.getElementById('countDisplay').innerText = drawnCards.length;
+        document.getElementById('totalDisplay').innerText = currentPositions.length;
+    }
+
+    function flipCard(element) {
+        if (element.classList.contains('flipped')) return;
+        element.classList.add('flipped');
+        setTimeout(() => {
+            element.parentElement.querySelector('.card-meaning').style.display = 'block';
+        }, 300);
+    }
+
+    function generateOutput() {
+        const question = document.getElementById('userQuestion').value;
+        const selector = document.getElementById('spreadSelector');
+        const spreadName = SPREAD_TYPES[selector.value].name;
+
+        let text = `🔮 Питання: ${question}\n📋 Розклад: ${spreadName}\n\n`;
+        drawnCards.forEach(card => {
+            text += `🔹 [${card.position}]: ${card.name}\n   Суть: ${card.meaning}\n\n`;
+        });
+        text += "--- Згенеровано Mystic Tarot App v3.1 ---";
+        
+        const textArea = document.getElementById('resultText');
+        textArea.value = text;
+        
+        // Автоматична висота поля
+        textArea.style.height = 'auto';
+        textArea.style.height = (textArea.scrollHeight + 10) + 'px';
+
+        document.getElementById('outputZone').style.display = 'block';
+        
+        setTimeout(() => {
+            document.getElementById('outputZone').scrollIntoView({ behavior: 'smooth' });
+        }, 500);
+    }
+
+    function copyResult() {
+        const copyText = document.getElementById("resultText");
+        copyText.select();
+        document.execCommand("copy");
+        
+        const btn = document.querySelector('.copy-btn');
+        const originalText = btn.innerText;
+        btn.innerText = "Скопійовано!";
+        setTimeout(() => btn.innerText = originalText, 2000);
+    }
+</script>
+
+</body>
+</html>
