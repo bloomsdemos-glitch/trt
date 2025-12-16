@@ -1,374 +1,328 @@
 <!DOCTYPE html>
-
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mystic Tarot v4.0: Full Deck</title>
+    <title>Mystic Tarot v3.2: Enhanced Edition</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400&display=swap');
 
-```
-    :root {
-        --bg-color: #0f0f13;
-        --accent: #d4af37;
-        --accent-dim: #8a7020;
-        --text-main: #e0e0e0;
-        --card-width: 130px; 
-        --card-height: 220px;
-    }
+        :root {
+            --bg-color: #0f0f13;
+            --accent: #d4af37; /* Gold */
+            --accent-dim: #8a7020;
+            --text-main: #e0e0e0;
+            --card-width: 130px; 
+            --card-height: 220px;
+        }
 
-    body {
-        background-color: var(--bg-color);
-        color: var(--text-main);
-        font-family: 'Lato', sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        padding: 20px;
-        overflow-x: hidden;
-    }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Lato', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+        }
 
-    h1 {
-        font-family: 'Cinzel', serif;
-        color: var(--accent);
-        text-transform: uppercase;
-        letter-spacing: 3px;
-        text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
-        margin-bottom: 10px;
-    }
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            margin-bottom: 10px;
+        }
 
-    .controls {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        width: 100%;
-        max-width: 600px;
-        margin-bottom: 20px;
-        z-index: 10;
-        align-items: center;
-        background: rgba(20, 20, 25, 0.8);
-        padding: 20px;
-        border-radius: 10px;
-        border: 1px solid #333;
-    }
+        /* Controls Area */
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+            z-index: 10;
+            align-items: center;
+            background: rgba(20, 20, 25, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
 
-    input[type="text"], select {
-        width: 90%;
-        padding: 12px;
-        background: #1a1a1a;
-        border: 1px solid #444;
-        color: white;
-        border-radius: 4px;
-        font-family: 'Lato', sans-serif;
-        outline: none;
-        text-align: center;
-        transition: 0.3s;
-    }
-    
-    input[type="text"]:focus, select:focus { border-color: var(--accent); }
+        input[type="text"], input[type="number"], select {
+            width: 90%;
+            padding: 12px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 4px;
+            font-family: 'Lato', sans-serif;
+            outline: none;
+            text-align: center;
+            transition: 0.3s;
+        }
+        
+        input[type="text"]:focus, input[type="number"]:focus, select:focus { border-color: var(--accent); }
 
-    .shuffle-duration {
-        width: 90%;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
 
-    .shuffle-duration label {
-        font-size: 0.85em;
-        color: #aaa;
-        text-align: center;
-    }
+        button {
+            padding: 12px 20px;
+            font-family: 'Cinzel', serif;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: 0.3s;
+            border-radius: 4px;
+            border: 1px solid var(--accent);
+        }
 
-    input[type="range"] {
-        width: 100%;
-        height: 6px;
-        background: #333;
-        outline: none;
-        border-radius: 3px;
-        -webkit-appearance: none;
-    }
+        button.shuffle-btn {
+            background: transparent;
+            color: var(--accent);
+        }
 
-    input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 18px;
-        height: 18px;
-        background: var(--accent);
-        cursor: pointer;
-        border-radius: 50%;
-    }
+        button.shuffle-btn:hover {
+            background: rgba(212, 175, 55, 0.1);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
 
-    input[type="range"]::-moz-range-thumb {
-        width: 18px;
-        height: 18px;
-        background: var(--accent);
-        cursor: pointer;
-        border-radius: 50%;
-        border: none;
-    }
+        button.reset-btn {
+            background: #333;
+            color: #888;
+            border-color: #555;
+            font-size: 0.8em;
+        }
+        button.reset-btn:hover { background: #444; color: white; }
 
-    .duration-value {
-        color: var(--accent);
-        font-weight: bold;
-    }
+        button.finish-btn {
+            background: #444;
+            color: var(--accent);
+            border-color: var(--accent-dim);
+        }
+        button.finish-btn:hover { background: #555; }
 
-    .btn-group {
-        display: flex;
-        gap: 10px;
-        width: 100%;
-        justify-content: center;
-    }
+        /* Deck Area */
+        .deck-zone {
+            height: 260px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
 
-    button {
-        padding: 12px 20px;
-        font-family: 'Cinzel', serif;
-        cursor: pointer;
-        text-transform: uppercase;
-        font-weight: bold;
-        transition: 0.3s;
-        border-radius: 4px;
-        border: 1px solid var(--accent);
-    }
+        .deck-container {
+            position: relative;
+            width: var(--card-width);
+            height: var(--card-height);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .deck-container.locked {
+            opacity: 0.5;
+            pointer-events: none;
+            filter: grayscale(100%);
+        }
 
-    button.shuffle-btn {
-        background: transparent;
-        color: var(--accent);
-    }
+        .deck-card {
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(45deg, #181825, #181825 10px, #252538 10px, #252538 20px);
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            position: absolute;
+            top: 0; left: 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .deck-card::after { content: '✦'; font-size: 40px; color: var(--accent); opacity: 0.4; }
 
-    button.shuffle-btn:hover {
-        background: rgba(212, 175, 55, 0.1);
-        box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
-    }
+        /* Shuffle Animation */
+        @keyframes shuffleLeft {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-60px, -10px) rotate(-5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        @keyframes shuffleRight {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(60px, 10px) rotate(5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
 
-    button.reset-btn {
-        background: #333;
-        color: #888;
-        border-color: #555;
-        font-size: 0.8em;
-    }
-    button.reset-btn:hover { background: #444; color: white; }
+        .shuffling .c1 { animation: shuffleLeft 0.5s ease-in-out; animation-iteration-count: 3; }
+        .shuffling .c2 { animation: shuffleRight 0.5s ease-in-out; animation-iteration-count: 3; }
+        .shuffling .c3 { animation: shuffleLeft 0.5s ease-in-out reverse; animation-iteration-count: 3; }
 
-    .deck-zone {
-        height: 260px;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 20px;
-    }
+        .deck-instruction {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: var(--accent);
+            font-style: italic;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
 
-    .deck-container {
-        position: relative;
-        width: var(--card-width);
-        height: var(--card-height);
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    
-    .deck-container.locked {
-        opacity: 0.5;
-        pointer-events: none;
-        filter: grayscale(100%);
-    }
+        /* Spread Area */
+        .spread-area {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 200px;
+            padding-bottom: 50px;
+        }
 
-    .deck-card {
-        width: 100%;
-        height: 100%;
-        background: repeating-linear-gradient(45deg, #181825, #181825 10px, #252538 10px, #252538 20px);
-        border: 2px solid var(--accent);
-        border-radius: 10px;
-        position: absolute;
-        top: 0; left: 0;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: transform 0.3s ease;
-    }
-    
-    .deck-card::after { content: '✦'; font-size: 40px; color: var(--accent); opacity: 0.4; }
+        .card-slot {
+            width: var(--card-width);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            animation: fadeIn 0.8s forwards;
+            margin-bottom: 20px;
+        }
+        @keyframes fadeIn { to { opacity: 1; } }
 
-    @keyframes shuffleLeft {
-        0% { transform: translate(0, 0) rotate(0deg); }
-        50% { transform: translate(-60px, -10px) rotate(-5deg); }
-        100% { transform: translate(0, 0) rotate(0deg); }
-    }
-    @keyframes shuffleRight {
-        0% { transform: translate(0, 0) rotate(0deg); }
-        50% { transform: translate(60px, 10px) rotate(5deg); }
-        100% { transform: translate(0, 0) rotate(0deg); }
-    }
+        .card-inner {
+            width: var(--card-width);
+            height: var(--card-height);
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+            cursor: pointer;
+        }
+        .card-inner.flipped { transform: rotateY(180deg); }
+        
+        .card-front, .card-back {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; border-radius: 10px; border: 2px solid var(--accent);
+        }
+        .card-front { background: repeating-linear-gradient(45deg, #181825, #181825 10px, #252538 10px, #252538 20px); display: flex; align-items: center; justify-content: center; }
+        .card-front::after { content: '✦'; font-size: 40px; color: var(--accent); }
+        .card-back { background: #000; transform: rotateY(180deg); background-size: cover; background-position: center; }
+        .card-back.inverted { transform: rotateY(180deg) rotate(180deg); }
 
-    .shuffling .c1 { animation: shuffleLeft 0.5s ease-in-out; }
-    .shuffling .c2 { animation: shuffleRight 0.5s ease-in-out; }
-    .shuffling .c3 { animation: shuffleLeft 0.5s ease-in-out reverse; }
+        .card-meaning {
+            margin-top: 10px;
+            font-size: 0.8em;
+            text-align: center;
+            background: rgba(0,0,0,0.8);
+            padding: 10px;
+            border-radius: 5px;
+            border-top: 1px solid var(--accent);
+            display: none;
+            width: 100%;
+            box-sizing: border-box;
+            color: #ccc;
+        }
+        .card-meaning strong { color: var(--accent); display: block; margin-bottom: 5px; font-family: 'Cinzel';}
 
-    .deck-instruction {
-        margin-top: 15px;
-        font-size: 0.9em;
-        color: var(--accent);
-        font-style: italic;
-        opacity: 0;
-        transition: opacity 0.5s;
-    }
+        .position-label {
+            font-family: 'Cinzel', serif;
+            font-size: 0.7em;
+            color: #888;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            text-align: center;
+            height: 30px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
 
-    .spread-area {
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
-        width: 100%;
-        max-width: 1200px;
-        min-height: 200px;
-        padding-bottom: 50px;
-    }
+        /* Result Box - FIXED */
+        .output-zone {
+            width: 90%;
+            max-width: 800px;
+            background: #151515;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            display: none;
+            margin-bottom: 50px;
+        }
+        textarea { 
+            width: 100%; 
+            height: auto; 
+            min-height: 200px; /* Базова висота */
+            background: #0a0a0a; 
+            color: #aaa; 
+            border: 1px solid #333; 
+            resize: vertical; 
+            box-sizing: border-box; 
+            padding: 15px; 
+            font-family: monospace; 
+            white-space: pre-wrap; /* Щоб переноси рядків зберігались */
+        }
+        .copy-btn { margin-top: 10px; padding: 12px 30px; background: var(--accent); color: #000; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; width: 100%; }
+        .copy-btn:hover { background: white; }
 
-    .card-slot {
-        width: var(--card-width);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        opacity: 0;
-        animation: fadeIn 0.8s forwards;
-        margin-bottom: 20px;
-    }
-    @keyframes fadeIn { to { opacity: 1; } }
-
-    .card-inner {
-        width: var(--card-width);
-        height: var(--card-height);
-        position: relative;
-        transform-style: preserve-3d;
-        transition: transform 0.8s;
-        cursor: pointer;
-    }
-    .card-inner.flipped { transform: rotateY(180deg); }
-    .card-inner.reversed { transform: rotateY(180deg) rotate(180deg); }
-    .card-inner.flipped.reversed { transform: rotateY(360deg) rotate(180deg); }
-    
-    .card-front, .card-back {
-        position: absolute; width: 100%; height: 100%;
-        backface-visibility: hidden; border-radius: 10px; border: 2px solid var(--accent);
-    }
-    .card-front { background: repeating-linear-gradient(45deg, #181825, #181825 10px, #252538 10px, #252538 20px); display: flex; align-items: center; justify-content: center; }
-    .card-front::after { content: '✦'; font-size: 40px; color: var(--accent); }
-    .card-back { background: #000; transform: rotateY(180deg); background-size: cover; background-position: center; }
-
-    .card-meaning {
-        margin-top: 10px;
-        font-size: 0.8em;
-        text-align: center;
-        background: rgba(0,0,0,0.8);
-        padding: 10px;
-        border-radius: 5px;
-        border-top: 1px solid var(--accent);
-        display: none;
-        width: 100%;
-        box-sizing: border-box;
-        color: #ccc;
-    }
-    .card-meaning strong { color: var(--accent); display: block; margin-bottom: 5px; font-family: 'Cinzel';}
-    .card-meaning.reversed-indicator { border-top: 2px solid #c44; }
-    .card-meaning.reversed-indicator strong::after { content: " (Перевернута)"; font-size: 0.8em; color: #c44; }
-
-    .position-label {
-        font-family: 'Cinzel', serif;
-        font-size: 0.7em;
-        color: #888;
-        margin-bottom: 5px;
-        text-transform: uppercase;
-        text-align: center;
-        height: 30px;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-    }
-
-    .output-zone {
-        width: 90%;
-        max-width: 800px;
-        background: #151515;
-        padding: 20px;
-        border: 1px solid #333;
-        border-radius: 8px;
-        display: none;
-        margin-bottom: 50px;
-    }
-    textarea { 
-        width: 100%; 
-        height: auto; 
-        min-height: 200px;
-        background: #0a0a0a; 
-        color: #aaa; 
-        border: 1px solid #333; 
-        resize: vertical; 
-        box-sizing: border-box; 
-        padding: 15px; 
-        font-family: monospace; 
-        white-space: pre-wrap;
-    }
-    .copy-btn { margin-top: 10px; padding: 12px 30px; background: var(--accent); color: #000; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; width: 100%; }
-    .copy-btn:hover { background: white; }
-
-</style>
-```
-
+    </style>
 </head>
 <body>
 
-```
-<h1>Oracle ✦ Gemini</h1>
-
-<div class="controls">
-    <input type="text" id="userQuestion" placeholder="Твоє питання до Всесвіту...">
+    <h1>Oracle ✦ Gemini</h1>
     
-    <select id="spreadSelector">
-        <option value="1">✦ Бліц (1 карта)</option>
-        <option value="3" selected>✦ Три карти (Минуле/Тепер./Майб.)</option>
-        <option value="3_alt">✦ Розум / Серце / Дії (3 карти)</option>
-        <option value="5">✦ Шлях (5 карт)</option>
-        <option value="7">✦ Велика Семірка (7 карт — вибір по черзі)</option>
-        <option value="10">✦ КЕЛЬТСЬКИЙ ХРЕСТ (10 карт)</option>
-    </select>
+    <div class="controls">
+        <input type="text" id="userQuestion" placeholder="Твоє питання до Всесвіту...">
+        
+        <select id="spreadSelector">
+            <option value="1">✦ Бліц (1 карта)</option>
+            <option value="3" selected>✦ Три карти (Минуле/Тепер./Майб.)</option>
+            <option value="3_alt">✦ Розум / Серце / Дії (3 карти)</option>
+            <option value="5">✦ Шлях (5 карт)</option>
+            <option value="10">✦ КЕЛЬТСЬКИЙ ХРЕСТ (10 карт)</option>
+            <option value="free">✦ Вільний Розклад (обирай скільки хочеш, по черзі)</option>
+        </select>
 
-    <div class="shuffle-duration">
-        <label>⏱ Тривалість тасування: <span class="duration-value" id="durationValue">1.5</span> сек</label>
-        <input type="range" id="shuffleDuration" min="0.5" max="5" step="0.5" value="1.5">
+        <input type="number" id="shuffleCycles" min="1" max="20" value="3" placeholder="Кількість циклів тасування (1-20)">
+
+        <div class="btn-group">
+            <button class="shuffle-btn" onclick="startShuffle()">🖐 Перетасувати колоду</button>
+            <button class="reset-btn" onclick="resetAll()">Скинути</button>
+            <button class="finish-btn" onclick="finishSpread()" style="display: none;">Завершити розклад</button>
+        </div>
     </div>
 
-    <div class="btn-group">
-        <button class="shuffle-btn" onclick="startShuffle()">🖐 Перетасувати колоду</button>
-        <button class="reset-btn" onclick="resetAll()">Скинути</button>
+    <div class="deck-zone">
+        <div class="deck-container locked" id="deckContainer" onclick="drawCard()">
+            <div class="deck-card c1"></div>
+            <div class="deck-card c2" style="transform: translate(2px, 2px);"></div>
+            <div class="deck-card c3" style="transform: translate(4px, 4px);"></div>
+            <div class="deck-card" style="transform: translate(6px, 6px);"></div>
+        </div>
+        <div class="deck-instruction" id="deckInst">Колода готова. Тягни карти! (<span id="countDisplay">0</span>/<span id="totalDisplay">0</span>)</div>
     </div>
-</div>
 
-<div class="deck-zone">
-    <div class="deck-container locked" id="deckContainer" onclick="drawCard()">
-        <div class="deck-card c1"></div>
-        <div class="deck-card c2" style="transform: translate(2px, 2px);"></div>
-        <div class="deck-card c3" style="transform: translate(4px, 4px);"></div>
-        <div class="deck-card" style="transform: translate(6px, 6px);"></div>
+    <div class="spread-area" id="spreadArea"></div>
+
+    <div class="output-zone" id="outputZone">
+        <h3 style="margin-top:0; color:var(--accent); font-family:'Cinzel'">✦ Твій Розклад ✦</h3>
+        <textarea id="resultText" readonly></textarea>
+        <button class="copy-btn" onclick="copyResult()">Скопіювати все</button>
     </div>
-    <div class="deck-instruction" id="deckInst">Колода готова. Тягни карти! (<span id="countDisplay">0</span>/<span id="totalDisplay">0</span>)</div>
-</div>
-
-<div class="spread-area" id="spreadArea"></div>
-
-<div class="output-zone" id="outputZone">
-    <h3 style="margin-top:0; color:var(--accent); font-family:'Cinzel'">✦ Твій Розклад ✦</h3>
-    <textarea id="resultText" readonly></textarea>
-    <button class="copy-btn" onclick="copyResult()">Скопіювати все</button>
-</div>
-```
 
 <script>
     const tarotDeck = [
-        // Старші аркани (Major Arcana)
         { name: "The Fool (Блазень)", img: "https://upload.wikimedia.org/wikipedia/commons/9/90/RWS_Tarot_00_Fool.jpg", meaning: "Новий старт, наївність, ризик." },
         { name: "The Magician (Маг)", img: "https://upload.wikimedia.org/wikipedia/commons/d/de/RWS_Tarot_01_Magician.jpg", meaning: "Дія, маніфестація, сила волі." },
         { name: "The High Priestess (Жриця)", img: "https://upload.wikimedia.org/wikipedia/commons/8/88/RWS_Tarot_02_High_Priestess.jpg", meaning: "Інтуїція, таємниця, підсвідомість." },
@@ -391,70 +345,62 @@
         { name: "The Sun (Сонце)", img: "https://upload.wikimedia.org/wikipedia/commons/1/17/RWS_Tarot_19_Sun.jpg", meaning: "Радість, успіх, ясність." },
         { name: "Judgement (Суд)", img: "https://upload.wikimedia.org/wikipedia/commons/d/dd/RWS_Tarot_20_Judgement.jpg", meaning: "Відродження, прощення, поклик." },
         { name: "The World (Світ)", img: "https://upload.wikimedia.org/wikipedia/commons/f/ff/RWS_Tarot_21_World.jpg", meaning: "Завершення, цілісність, подорож." },
-        
-        // Мечі (Swords)
         { name: "Ace of Swords (Туз Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Swords01.jpg", meaning: "Ясність, нова ідея, правда." },
-        { name: "Two of Swords (2 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/9/9e/Swords02.jpg", meaning: "Вибір, патова ситуація, блокування." },
-        { name: "Three of Swords (3 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Swords03.jpg", meaning: "Біль, розбите серце, смуток." },
-        { name: "Four of Swords (4 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/b/bf/Swords04.jpg", meaning: "Відпочинок, відновлення, пауза." },
-        { name: "Five of Swords (5 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/2/23/Swords05.jpg", meaning: "Конфлікт, поразка, нечесність." },
-        { name: "Six of Swords (6 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/2/29/Swords06.jpg", meaning: "Перехід, подорож, залишення позаду." },
-        { name: "Seven of Swords (7 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/3/34/Swords07.jpg", meaning: "Обман, стратегія, крадіжка." },
-        { name: "Eight of Swords (8 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/a/a7/Swords08.jpg", meaning: "Обмеження, відчуття пастки, безпорадність." },
-        { name: "Nine of Swords (9 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Swords09.jpg", meaning: "Тривога, кошмари, страх." },
-        { name: "Ten of Swords (10 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Swords10.jpg", meaning: "Кінець, зрада, дно." },
-        { name: "Page of Swords (Паж Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Swords11.jpg", meaning: "Цікавість, комунікація, спостереження." },
-        { name: "Knight of Swords (Лицар Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/b/b0/Swords12.jpg", meaning: "Дія, імпульсивність, прямолінійність." },
-        { name: "Queen of Swords (Королева Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Swords13.jpg", meaning: "Незалежність, об'єктивність, проникливість." },
-        { name: "King of Swords (Король Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/3/33/Swords14.jpg", meaning: "Авторитет, інтелект, справедливість." },
-
-        // Кубки (Cups)
+        { name: "2 of Swords (2 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/9/9f/Swords02.jpg", meaning: "" },
+        { name: "3 of Swords (3 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Swords03.jpg", meaning: "Біль, розбите серце, смуток." },
+        { name: "4 of Swords (4 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/a/a6/Swords04.jpg", meaning: "" },
+        { name: "5 of Swords (5 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/2/23/Swords05.jpg", meaning: "" },
+        { name: "6 of Swords (6 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/2/23/Swords06.jpg", meaning: "" },
+        { name: "7 of Swords (7 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/3/34/Swords07.jpg", meaning: "" },
+        { name: "8 of Swords (8 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/a/a4/Swords08.jpg", meaning: "" },
+        { name: "9 of Swords (9 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/2/24/Swords09.jpg", meaning: "" },
+        { name: "10 of Swords (10 Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Swords10.jpg", meaning: "Кінець, зрада, дно." },
+        { name: "Page of Swords (Паж Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Swords11.jpg", meaning: "" },
+        { name: "Knight of Swords (Лицар Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/b/b0/Swords12.jpg", meaning: "" },
+        { name: "Queen of Swords (Королева Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Swords13.jpg", meaning: "" },
+        { name: "King of Swords (Король Мечів)", img: "https://upload.wikimedia.org/wikipedia/commons/3/33/Swords14.jpg", meaning: "" },
         { name: "Ace of Cups (Туз Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/3/36/Cups01.jpg", meaning: "Нова любов, емоції, початок." },
-        { name: "Two of Cups (2 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Cups02.jpg", meaning: "Партнерство, зустріч, кохання." },
-        { name: "Three of Cups (3 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Cups03.jpg", meaning: "Святкування, дружба, радість." },
-        { name: "Four of Cups (4 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/3/35/Cups04.jpg", meaning: "Апатія, роздуми, медитація." },
-        { name: "Five of Cups (5 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/d/d7/Cups05.jpg", meaning: "Втрата, горе, зосередження на негативі." },
-        { name: "Six of Cups (6 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/1/17/Cups06.jpg", meaning: "Ностальгія, дитинство, спогади." },
-        { name: "Seven of Cups (7 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/a/ae/Cups07.jpg", meaning: "Вибір, ілюзії, мрії." },
-        { name: "Eight of Cups (8 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/6/60/Cups08.jpg", meaning: "Відхід, пошук себе, залишення." },
-        { name: "Nine of Cups (9 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/2/24/Cups09.jpg", meaning: "Задоволення, виконання бажань, щастя." },
-        { name: "Ten of Cups (10 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/8/84/Cups10.jpg", meaning: "Гармонія, родина, виконання." },
-        { name: "Page of Cups (Паж Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/a/ad/Cups11.jpg", meaning: "Креативність, інтуїція, нові емоції." },
-        { name: "Knight of Cups (Лицар Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Cups12.jpg", meaning: "Романтика, шарм, ідеалізм." },
-        { name: "Queen of Cups (Королева Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/6/62/Cups13.jpg", meaning: "Емпатія, інтуїція, піклування." },
-        { name: "King of Cups (Король Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/0/04/Cups14.jpg", meaning: "Емоційна зрілість, мудрість, спокій." },
-
-        // Жезли (Wands)
-        { name: "Ace of Wands (Туз Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/1/11/Wands01.jpg", meaning: "Натхнення, нові можливості, творчість." },
-        { name: "Two of Wands (2 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/0/0f/Wands02.jpg", meaning: "Планування, рішення, майбутнє." },
-        { name: "Three of Wands (3 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Wands03.jpg", meaning: "Розширення, прогрес, дальність бачення." },
-        { name: "Four of Wands (4 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/a/a4/Wands04.jpg", meaning: "Святкування, стабільність, дім." },
-        { name: "Five of Wands (5 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Wands05.jpg", meaning: "Конфлікт, суперництво, хаос." },
-        { name: "Six of Wands (6 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Wands06.jpg", meaning: "Перемога, визнання, успіх." },
-        { name: "Seven of Wands (7 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/e/e4/Wands07.jpg", meaning: "Захист, боротьба, стійкість." },
-        { name: "Eight of Wands (8 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/6/6b/Wands08.jpg", meaning: "Швидкість, рух, дія." },
-        { name: "Nine of Wands (9 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/4/4d/Wands09.jpg", meaning: "Стійкість, оборона, витривалість." },
-        { name: "Ten of Wands (10 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Wands10.jpg", meaning: "Перевантаження, відповідальність, тягар." },
-        { name: "Page of Wands (Паж Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/6/6a/Wands11.jpg", meaning: "Ентузіазм, дослідження, новини." },
-        { name: "Knight of Wands (Лицар Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/1/16/Wands12.jpg", meaning: "Пристрасть, енергія, імпульсивність." },
-        { name: "Queen of Wands (Королева Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/0/0d/Wands13.jpg", meaning: "Впевненість, харизма, незалежність." },
-        { name: "King of Wands (Король Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Wands14.jpg", meaning: "Лідерство, візія, підприємництво." },
-
-        // Пентаклі (Pentacles)
-        { name: "Ace of Pentacles (Туз Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/f/fd/Pents01.jpg", meaning: "Нова можливість, процвітання, стабільність." },
-        { name: "Two of Pentacles (2 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/9/9f/Pents02.jpg", meaning: "Баланс, адаптація, жонглювання." },
-        { name: "Three of Pentacles (3 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/4/42/Pents03.jpg", meaning: "Співпраця, майстерність, робота." },
-        { name: "Four of Pentacles (4 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/3/35/Pents04.jpg", meaning: "Контроль, безпека, жадібність." },
-        { name: "Five of Pentacles (5 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/9/96/Pents05.jpg", meaning: "Фінансові труднощі, ізоляція, втрата." },
-        { name: "Six of Pentacles (6 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/a/a6/Pents06.jpg", meaning: "Щедрість, дарування, обмін." },
-        { name: "Seven of Pentacles (7 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/6/6a/Pents07.jpg", meaning: "Терпіння, інвестиція, оцінка прогресу." },
-        { name: "Eight of Pentacles (8 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/4/49/Pents08.jpg", meaning: "Майстерність, старанність, вдосконалення." },
-        { name: "Nine of Pentacles (9 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Pents09.jpg", meaning: "Достаток, самодостатність, розкіш." },
-        { name: "Ten of Pentacles (10 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/4/42/Pents10.jpg", meaning: "Спадщина, довгострокова стабільність, родина." },
-        { name: "Page of Pentacles (Паж Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Pents11.jpg", meaning: "Амбіція, навчання, нові проєкти." },
-        { name: "Knight of Pentacles (Лицар Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Pents12.jpg", meaning: "Працьовитість, відповідальність, рутина." },
-        { name: "Queen of Pentacles (Королева Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/8/88/Pents13.jpg", meaning: "Практичність, турбота, достаток." },
-        { name: "King of Pentacles (Король Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/1/1c/Pents14.jpg", meaning: "Багатство, бізнес, безпека." }
+        { name: "2 of Cups (2 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Cups02.jpg", meaning: "Партнерство, зустріч, кохання." },
+        { name: "3 of Cups (3 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/6/6f/Cups03.jpg", meaning: "" },
+        { name: "4 of Cups (4 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/e/e2/Cups04.jpg", meaning: "" },
+        { name: "5 of Cups (5 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/d/d7/Cups05.jpg", meaning: "" },
+        { name: "6 of Cups (6 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Cups06.jpg", meaning: "" },
+        { name: "7 of Cups (7 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/a/af/Cups07.jpg", meaning: "" },
+        { name: "8 of Cups (8 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/7/78/Cups08.jpg", meaning: "" },
+        { name: "9 of Cups (9 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/2/24/Cups09.jpg", meaning: "" },
+        { name: "10 of Cups (10 Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/8/84/Cups10.jpg", meaning: "" },
+        { name: "Page of Cups (Паж Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/6/62/Cups11.jpg", meaning: "" },
+        { name: "Knight of Cups (Лицар Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Cups12.jpg", meaning: "" },
+        { name: "Queen of Cups (Королева Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/6/62/Cups13.jpg", meaning: "" },
+        { name: "King of Cups (Король Кубків)", img: "https://upload.wikimedia.org/wikipedia/commons/0/04/Cups14.jpg", meaning: "" },
+        { name: "Ace of Pentacles (Туз Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/f/fd/Pents01.jpg", meaning: "" },
+        { name: "2 of Pentacles (2 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Pents02.jpg", meaning: "" },
+        { name: "3 of Pentacles (3 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/4/42/Pents03.jpg", meaning: "" },
+        { name: "4 of Pentacles (4 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/3/35/Pents04.jpg", meaning: "" },
+        { name: "5 of Pentacles (5 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/j/jd/Pents05.jpg", meaning: "" },
+        { name: "6 of Pentacles (6 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/c/c6/Pents06.jpg", meaning: "" },
+        { name: "7 of Pentacles (7 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/6/6a/Pents07.jpg", meaning: "" },
+        { name: "8 of Pentacles (8 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/4/49/Pents08.jpg", meaning: "" },
+        { name: "9 of Pentacles (9 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Pents09.jpg", meaning: "" },
+        { name: "10 of Pentacles (10 Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/4/42/Pents10.jpg", meaning: "" },
+        { name: "Page of Pentacles (Паж Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Pents11.jpg", meaning: "" },
+        { name: "Knight of Pentacles (Лицар Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Pents12.jpg", meaning: "" },
+        { name: "Queen of Pentacles (Королева Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/8/88/Pents13.jpg", meaning: "" },
+        { name: "King of Pentacles (Король Пентаклів)", img: "https://upload.wikimedia.org/wikipedia/commons/c/cf/Pents14.jpg", meaning: "" },
+        { name: "Ace of Wands (Туз Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/1/11/Wands01.jpg", meaning: "" },
+        { name: "2 of Wands (2 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/0/0f/Wands02.jpg", meaning: "" },
+        { name: "3 of Wands (3 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Wands03.jpg", meaning: "" },
+        { name: "4 of Wands (4 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/a/a4/Wands04.jpg", meaning: "" },
+        { name: "5 of Wands (5 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Wands05.jpg", meaning: "" },
+        { name: "6 of Wands (6 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/c/c0/Wands06.jpg", meaning: "" },
+        { name: "7 of Wands (7 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/6/6d/Wands07.jpg", meaning: "" },
+        { name: "8 of Wands (8 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/0/05/Wands08.jpg", meaning: "" },
+        { name: "9 of Wands (9 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Wands09.jpg", meaning: "" },
+        { name: "10 of Wands (10 Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/6/6b/Wands10.jpg", meaning: "" },
+        { name: "Page of Wands (Паж Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/a/ad/Wands11.jpg", meaning: "" },
+        { name: "Knight of Wands (Лицар Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/1/16/Wands12.jpg", meaning: "" },
+        { name: "Queen of Wands (Королева Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/0/0d/Wands13.jpg", meaning: "" },
+        { name: "King of Wands (Король Жезлів)", img: "https://upload.wikimedia.org/wikipedia/commons/9/93/Wands14.jpg", meaning: "" }
     ];
 
     const SPREAD_TYPES = {
@@ -462,7 +408,6 @@
         "3": { name: "Три Карти", positions: ["Минуле", "Теперішнє", "Майбутнє"] },
         "3_alt": { name: "Розум/Серце/Дії", positions: ["Думки", "Почуття", "Дії"] },
         "5": { name: "Шлях", positions: ["Зараз", "Перешкода", "Приховане", "Порада", "Результат"] },
-        "7": { name: "Велика Семірка", positions: ["1. Основа ситуації", "2. Внутрішні сили", "3. Зовнішні впливи", "4. Приховане", "5. Що залишити", "6. Що прийняти", "7. Результат"] },
         "10": { 
             name: "Кельтський Хрест", 
             positions: [
@@ -477,18 +422,14 @@
                 "9. Надії / Страхи", 
                 "10. Підсумок"
             ] 
-        }
+        },
+        "free": { name: "Вільний Розклад", positions: [] }
     };
 
     let currentDeck = [];
     let drawnCards = [];
     let currentPositions = [];
     let isReadingActive = false;
-
-    // Оновлення значення слайдера
-    document.getElementById('shuffleDuration').addEventListener('input', function(e) {
-        document.getElementById('durationValue').textContent = e.target.value;
-    });
 
     function resetAll() {
         document.getElementById('spreadArea').innerHTML = '';
@@ -497,6 +438,7 @@
         document.getElementById('deckInst').style.opacity = '0';
         document.getElementById('deckContainer').classList.add('locked');
         document.getElementById('deckContainer').classList.remove('shuffling');
+        document.querySelector('.finish-btn').style.display = 'none';
         isReadingActive = false;
         drawnCards = [];
         document.getElementById('countDisplay').innerText = '0';
@@ -513,25 +455,22 @@
         const spreadConfig = SPREAD_TYPES[selector.value];
         currentPositions = spreadConfig.positions;
 
+        const cycles = parseInt(document.getElementById('shuffleCycles').value) || 3;
+
         const deck = document.getElementById('deckContainer');
-        const duration = parseFloat(document.getElementById('shuffleDuration').value) * 1000;
-        
-        // Динамічна анімація
-        const style = document.createElement('style');
-        const iterations = Math.ceil(duration / 500);
-        style.textContent = `
-            .shuffling .c1 { animation: shuffleLeft 0.5s ease-in-out ${iterations}; }
-            .shuffling .c2 { animation: shuffleRight 0.5s ease-in-out ${iterations}; }
-            .shuffling .c3 { animation: shuffleLeft 0.5s ease-in-out ${iterations} reverse; }
-        `;
-        document.head.appendChild(style);
-        
+        const c1 = document.querySelector('.c1');
+        const c2 = document.querySelector('.c2');
+        const c3 = document.querySelector('.c3');
+
+        c1.style.animationIterationCount = cycles;
+        c2.style.animationIterationCount = cycles;
+        c3.style.animationIterationCount = cycles;
+
         deck.classList.add('shuffling');
 
         setTimeout(() => {
             deck.classList.remove('shuffling');
             deck.classList.remove('locked');
-            document.head.removeChild(style);
             
             currentDeck = [...tarotDeck].sort(() => Math.random() - 0.5);
             isReadingActive = true;
@@ -539,37 +478,46 @@
             document.getElementById('deckInst').style.opacity = '1';
             updateCounter();
 
-        }, duration);
+            if (selector.value === 'free') {
+                document.querySelector('.finish-btn').style.display = 'block';
+                document.getElementById('totalDisplay').innerText = '∞';
+            }
+
+        }, cycles * 500);
     }
 
     function drawCard() {
         if (!isReadingActive) return;
-        if (drawnCards.length >= currentPositions.length) return;
+
+        if (currentPositions.length > 0 && drawnCards.length >= currentPositions.length) return;
 
         const cardData = currentDeck.pop();
-        const positionName = currentPositions[drawnCards.length];
-        const isReversed = Math.random() < 0.5; // 50% шанс перевернутої карти
+        const inverted = Math.random() < 0.5;
+        const positionName = currentPositions.length > 0 ? currentPositions[drawnCards.length] : `Карта ${drawnCards.length + 1}`;
         
-        drawnCards.push({ ...cardData, position: positionName, reversed: isReversed });
+        const displayName = inverted ? `${cardData.name} (Перевернута)` : cardData.name;
+        const displayMeaning = inverted ? (cardData.meaning ? `${cardData.meaning} (в перевернутому положенні - значення може бути протилежним або ослабленим)` : '(Перевернута)') : cardData.meaning;
+
+        drawnCards.push({ ...cardData, position: positionName, inverted, displayName, displayMeaning });
 
         const cardSlot = document.createElement('div');
         cardSlot.className = 'card-slot';
         cardSlot.innerHTML = `
             <div class="position-label">${positionName}</div>
-            <div class="card-inner ${isReversed ? 'reversed' : ''}" onclick="flipCard(this)">
+            <div class="card-inner" onclick="flipCard(this)">
                 <div class="card-front"></div>
-                <div class="card-back" style="background-image: url('${cardData.img}')"></div>
+                <div class="card-back ${inverted ? 'inverted' : ''}" style="background-image: url('${cardData.img}')"></div>
             </div>
-            <div class="card-meaning ${isReversed ? 'reversed-indicator' : ''}">
-                <strong>${cardData.name}</strong>
-                ${cardData.meaning}
+            <div class="card-meaning">
+                <strong>${displayName}</strong>
+                ${displayMeaning}
             </div>
         `;
         document.getElementById('spreadArea').appendChild(cardSlot);
 
         updateCounter();
 
-        if (drawnCards.length === currentPositions.length) {
+        if (currentPositions.length > 0 && drawnCards.length === currentPositions.length) {
             isReadingActive = false;
             document.getElementById('deckContainer').classList.add('locked');
             document.getElementById('deckInst').innerText = "Розклад завершено. Відкривай карти!";
@@ -577,9 +525,19 @@
         }
     }
 
+    function finishSpread() {
+        if (document.getElementById('spreadSelector').value !== 'free') return;
+        isReadingActive = false;
+        document.getElementById('deckContainer').classList.add('locked');
+        document.getElementById('deckInst').innerText = "Розклад завершено. Відкривай карти!";
+        document.querySelector('.finish-btn').style.display = 'none';
+        generateOutput();
+    }
+
     function updateCounter() {
         document.getElementById('countDisplay').innerText = drawnCards.length;
-        document.getElementById('totalDisplay').innerText = currentPositions.length;
+        const total = currentPositions.length > 0 ? currentPositions.length : '∞';
+        document.getElementById('totalDisplay').innerText = total;
     }
 
     function flipCard(element) {
@@ -597,14 +555,14 @@
 
         let text = `🔮 Питання: ${question}\n📋 Розклад: ${spreadName}\n\n`;
         drawnCards.forEach(card => {
-            const reversedLabel = card.reversed ? " (Перевернута)" : "";
-            text += `🔹 [${card.position}]: ${card.name}${reversedLabel}\n   Суть: ${card.meaning}\n\n`;
+            text += `🔹 [${card.position}]: ${card.displayName}\n   Суть: ${card.displayMeaning}\n\n`;
         });
-        text += "--- Згенеровано Mystic Tarot App v4.0 ---";
+        text += "--- Згенеровано Mystic Tarot App v3.2 ---";
         
         const textArea = document.getElementById('resultText');
         textArea.value = text;
         
+        // Автоматична висота поля
         textArea.style.height = 'auto';
         textArea.style.height = (textArea.scrollHeight + 10) + 'px';
 
